@@ -50,6 +50,7 @@
     wget
     curl
     gitingest
+    nerd-fonts.jetbrains-mono
   ];
 
   # Nix Settings

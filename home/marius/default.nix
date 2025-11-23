@@ -13,7 +13,11 @@
     
     config = {
       modifier = "Mod4"; # Sets the "Windows" key as your main modifier
-      terminal = "alacritty"; 
+      terminal = "alacritty";
+      fonts = {
+        names = [ "JetBrains Mono Nerd Font" ];
+        size = 11.0;
+      };
       
       output = {
         "DP-3" = {
