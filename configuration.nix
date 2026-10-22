@@ -142,7 +142,7 @@ in
     programs.helix = {
       enable = true;
       settings = {
-        theme = "catppuccin_latte";
+        theme = "catppuccin_mocha";
         editor = {
           line-number = "relative";
           cursorline = true;
@@ -169,73 +169,73 @@ in
           bold_italic.family = "JetBrainsMono Nerd Font";
         };
 
-        # Catppuccin Latte
+        # Catppuccin Mocha
         colors = {
           primary = {
-            background = "#eff1f5";
-            foreground = "#4c4f69";
-            dim_foreground = "#8c8fa1";
+            background = "#1e1e2e";
+            foreground = "#cdd6f4";
+            dim_foreground = "#7f849c";
           };
           cursor = {
-            text = "#eff1f5";
-            cursor = "#dc8a78";
+            text = "#1e1e2e";
+            cursor = "#f5e0dc";
           };
           vi_mode_cursor = {
-            text = "#eff1f5";
-            cursor = "#7287fd";
+            text = "#1e1e2e";
+            cursor = "#b4befe";
           };
           search.matches = {
-            foreground = "#eff1f5";
-            background = "#6c6f85";
+            foreground = "#1e1e2e";
+            background = "#a6adc8";
           };
           search.focused_match = {
-            foreground = "#eff1f5";
-            background = "#40a02b";
+            foreground = "#1e1e2e";
+            background = "#a6e3a1";
           };
           footer_bar = {
-            background = "#e6e9ef";
-            foreground = "#4c4f69";
+            background = "#313244";
+            foreground = "#cdd6f4";
           };
           hints.start = {
-            foreground = "#eff1f5";
-            background = "#df8e1d";
+            foreground = "#1e1e2e";
+            background = "#f9e2af";
           };
           hints.end = {
-            foreground = "#eff1f5";
-            background = "#8c8fa1";
+            foreground = "#1e1e2e";
+            background = "#a6adc8";
           };
           selection = {
-            text = "#eff1f5";
-            background = "#dc8a78";
+            text = "#1e1e2e";
+            background = "#f5e0dc";
           };
           normal = {
-            black = "#5c5f77";
-            red = "#d20f39";
-            green = "#40a02b";
-            yellow = "#df8e1d";
-            blue = "#1e66f5";
-            magenta = "#ea76cb";
-            cyan = "#179299";
-            white = "#acb0be";
+            black = "#45475a";
+            red = "#f38ba8";
+            green = "#a6e3a1";
+            yellow = "#f9e2af";
+            blue = "#89b4fa";
+            magenta = "#f5c2e7";
+            cyan = "#94e2d5";
+            white = "#bac2de";
           };
           bright = {
-            black = "#6c6f85";
-            red = "#d20f39";
-            green = "#40a02b";
-            yellow = "#df8e1d";
-            blue = "#1e66f5";
-            magenta = "#ea76cb";
-            cyan = "#179299";
-            white = "#bcc0cc";
+            black = "#585b70";
+            red = "#f38ba8";
+            green = "#a6e3a1";
+            yellow = "#f9e2af";
+            blue = "#89b4fa";
+            magenta = "#f5c2e7";
+            cyan = "#94e2d5";
+            white = "#a6adc8";
           };
         };
       };
     };
 
-    # GNOME: light color scheme + closest native accent to Catppuccin Latte's blue.
+    # GNOME: dark color scheme + closest native accent to Catppuccin Mocha's blue.
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-light";
+        color-scheme = "prefer-dark";
         accent-color = "blue";
         monospace-font-name = "JetBrainsMono Nerd Font 11";
       };
