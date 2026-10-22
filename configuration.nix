@@ -239,6 +239,9 @@ in
         accent-color = "blue";
         monospace-font-name = "JetBrainsMono Nerd Font 11";
       };
+      "org/gnome/shell" = {
+        enabled-extensions = [ "appindicatorsupport@rgcjonas.gmail.com" ];
+      };
     };
 
     programs.zsh = {
@@ -276,6 +279,9 @@ in
     gh
     pciutils
     inxi
+    # Restores GNOME's system tray (AppIndicator/KStatusNotifierItem icons,
+    # e.g. Spotify's tray icon) which GNOME Shell dropped natively.
+    gnomeExtensions.appindicator
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
