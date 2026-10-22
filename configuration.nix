@@ -4,10 +4,17 @@
 
 { config, pkgs, ... }:
 
+let
+  # Home Manager tracked against nixos-unstable, matching this system's channel.
+  home-manager = builtins.fetchTarball {
+    url = "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+  };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      (import "${home-manager}/nixos")
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -105,7 +112,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       # thunderbird
-      helix
       spotify
       claude-code
     ];
@@ -116,6 +122,26 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  # Home Manager: per-user dotfiles, tracked in this same repo.
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.marius = { pkgs, ... }: {
+    home.stateVersion = "26.05";
+
+    programs.helix = {
+      enable = true;
+      settings = {
+        theme = "default";
+        editor = {
+          line-number = "relative";
+          cursorline = true;
+          bufferline = "multiple";
+          color-modes = true;
+        };
+      };
+    };
+  };
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
