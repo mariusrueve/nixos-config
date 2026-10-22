@@ -104,10 +104,10 @@
     description = "Marius";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-    #  thunderbird
-    	helix
-    	spotify
-    	claude-code
+      # thunderbird
+      helix
+      spotify
+      claude-code
     ];
   };
 
