@@ -105,11 +105,15 @@ in
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  # Register zsh as a valid login shell and make it the default for marius.
+  programs.zsh.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."marius" = {
     isNormalUser = true;
     description = "Marius";
     extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       # thunderbird
       spotify
@@ -140,6 +144,33 @@ in
           color-modes = true;
         };
       };
+    };
+
+    programs.zsh = {
+      enable = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      enableCompletion = true;
+
+      history = {
+        size = 10000;
+        save = 10000;
+        ignoreDups = true;
+        share = true;
+      };
+
+      shellAliases = {
+        ll = "ls -la";
+        la = "ls -A";
+        ".." = "cd ..";
+        gs = "git status";
+      };
+
+      initContent = ''
+        autoload -Uz promptinit
+        promptinit
+        PROMPT='%F{blue}%~%f %F{green}❯%f '
+      '';
     };
   };
 
