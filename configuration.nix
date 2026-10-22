@@ -146,6 +146,18 @@ in
       };
     };
 
+    programs.alacritty = {
+      enable = true;
+      settings = {
+        window = {
+          padding = { x = 8; y = 8; };
+          opacity = 1.0;
+        };
+        scrolling.history = 10000;
+        font.size = 11;
+      };
+    };
+
     programs.zsh = {
       enable = true;
       autosuggestion.enable = true;
