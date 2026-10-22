@@ -53,6 +53,12 @@ in
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
+  # Required for Home Manager's dconf module to apply GNOME settings.
+  programs.dconf.enable = true;
+
+  # Monospace font used by Alacritty and Helix (via the terminal).
+  fonts.packages = with pkgs; [ nerd-fonts.jetbrains-mono ];
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -136,7 +142,7 @@ in
     programs.helix = {
       enable = true;
       settings = {
-        theme = "default";
+        theme = "catppuccin_latte";
         editor = {
           line-number = "relative";
           cursorline = true;
@@ -154,7 +160,84 @@ in
           opacity = 1.0;
         };
         scrolling.history = 10000;
-        font.size = 11;
+
+        font = {
+          size = 11;
+          normal.family = "JetBrainsMono Nerd Font";
+          bold.family = "JetBrainsMono Nerd Font";
+          italic.family = "JetBrainsMono Nerd Font";
+          bold_italic.family = "JetBrainsMono Nerd Font";
+        };
+
+        # Catppuccin Latte
+        colors = {
+          primary = {
+            background = "#eff1f5";
+            foreground = "#4c4f69";
+            dim_foreground = "#8c8fa1";
+          };
+          cursor = {
+            text = "#eff1f5";
+            cursor = "#dc8a78";
+          };
+          vi_mode_cursor = {
+            text = "#eff1f5";
+            cursor = "#7287fd";
+          };
+          search.matches = {
+            foreground = "#eff1f5";
+            background = "#6c6f85";
+          };
+          search.focused_match = {
+            foreground = "#eff1f5";
+            background = "#40a02b";
+          };
+          footer_bar = {
+            background = "#e6e9ef";
+            foreground = "#4c4f69";
+          };
+          hints.start = {
+            foreground = "#eff1f5";
+            background = "#df8e1d";
+          };
+          hints.end = {
+            foreground = "#eff1f5";
+            background = "#8c8fa1";
+          };
+          selection = {
+            text = "#eff1f5";
+            background = "#dc8a78";
+          };
+          normal = {
+            black = "#5c5f77";
+            red = "#d20f39";
+            green = "#40a02b";
+            yellow = "#df8e1d";
+            blue = "#1e66f5";
+            magenta = "#ea76cb";
+            cyan = "#179299";
+            white = "#acb0be";
+          };
+          bright = {
+            black = "#6c6f85";
+            red = "#d20f39";
+            green = "#40a02b";
+            yellow = "#df8e1d";
+            blue = "#1e66f5";
+            magenta = "#ea76cb";
+            cyan = "#179299";
+            white = "#bcc0cc";
+          };
+        };
+      };
+    };
+
+    # GNOME: light color scheme + closest native accent to Catppuccin Latte's blue.
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-light";
+        accent-color = "blue";
+        monospace-font-name = "JetBrainsMono Nerd Font 11";
       };
     };
 
