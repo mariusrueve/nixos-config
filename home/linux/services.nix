@@ -4,7 +4,7 @@
 { ... }:
 
 let
-  wallpaper = ../wallpapers/shaded-landscape.png;
+  wallpaper = ../../wallpapers/shaded-landscape.png;
   dpms = action: "hyprctl dispatch 'hl.dsp.dpms({ action = \"${action}\" })'";
 in
 {

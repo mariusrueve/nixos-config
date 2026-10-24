@@ -1,15 +1,10 @@
-# Look & feel: Catppuccin Mocha with a blue accent everywhere.
-# catppuccin/nix themes every enabled program it supports (kitty, tmux, zathura,
-# rofi, waybar, hyprland, hyprlock, swaync, wlogout, fzf, starship, ...).
+# Linux look & feel: cursors, GTK/Qt, icons. The Catppuccin flavour/accent
+# itself is set for both machines in home/common/default.nix.
 
 { pkgs, ... }:
 
 {
   catppuccin = {
-    enable = true;
-    flavor = "mocha";
-    accent = "blue";
-
     cursors = {
       enable = true;
       accent = "dark";

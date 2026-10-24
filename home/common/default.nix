@@ -1,33 +1,36 @@
-# Home Manager configuration for marius (imported from configuration.nix).
+# Home Manager config shared by BOTH machines (desktop and MacBook):
+# shell, terminal, editor, git, CLI tools, theme. Linux-only bits live in
+# home/linux/, macOS-only bits in home/darwin/.
 # Option docs: home-configuration.nix(5)
 
 { pkgs, ... }:
 
 {
   imports = [
-    ./hyprland.nix
-    ./waybar.nix
-    ./services.nix
-    ./apps.nix
-    ./theme.nix
-    ./neovim # editor (nixvim): home/neovim/
+    ./kitty.nix
+    ./neovim # editor (nixvim)
   ];
 
   home.stateVersion = "26.05";
 
-  # ── Your programs ──────────────────────────────────────────────────────
+  # ── Your programs (both machines) ──────────────────────────────────────
   # Add a package name here, then apply with:
-  #   cd ~/nixos-config && sudo nixos-rebuild switch --flake .
+  #   desktop: cd ~/nixos-config && sudo nixos-rebuild switch --flake .
+  #   MacBook: cd ~/nixos-config && sudo darwin-rebuild switch --flake .
   # Find names at https://search.nixos.org/packages or `nix search nixpkgs <name>`.
-  # Programs with their own `programs.<name>` option (configured below or in
-  # apps.nix) don't need to be listed here.
+  # Only on one machine? → home/linux/default.nix or home/darwin/default.nix.
+  # Mac GUI apps → homebrew.casks in hosts/macbook/default.nix.
   home.packages = with pkgs; [
     fastfetch
-    spotify
-    discord
     claude-code # from the claude-code-nix overlay (always up to date)
-    # thunderbird
   ];
+
+  # Catppuccin Mocha, blue accent, for every supported program on both machines.
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "blue";
+  };
 
   # Git config lives in ~/.config/git/config. User identity stays in ~/.gitconfig.
   programs.git = {

@@ -33,7 +33,7 @@
     # `nixos-rebuild switch` picks this configuration automatically.
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
       modules = [
-        ./configuration.nix
+        ./hosts/desktop/configuration.nix
         home-manager.nixosModules.home-manager
         catppuccin.nixosModules.catppuccin
         {

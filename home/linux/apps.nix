@@ -1,4 +1,5 @@
-# Terminal, launcher, power menu and browser. Colours come from catppuccin (home/theme.nix).
+# Linux desktop apps: launcher, power menu, browser, PDF viewer, default apps.
+# Colours come from catppuccin. (kitty is shared: home/common/kitty.nix.)
 
 { pkgs, ... }:
 
@@ -34,25 +35,6 @@ in
       "x-scheme-handler/unknown" = browser;
       # Claude Code login links (registered by Claude Code itself).
       "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
-    };
-  };
-
-  programs.kitty = {
-    enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11;
-    };
-    settings = {
-      window_padding_width = 8;
-      # Slightly translucent; Hyprland blurs what's behind it.
-      background_opacity = "0.92";
-      scrollback_lines = 10000;
-      confirm_os_window_close = 0;
-      enable_audio_bell = false;
-      # Static cursor: no trail animation, no blinking.
-      cursor_trail = 0;
-      cursor_blink_interval = 0;
     };
   };
 

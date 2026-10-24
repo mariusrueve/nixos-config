@@ -9,9 +9,9 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       # Hyprland desktop: greeter, portals, GPU env, desktop services.
-      ./modules/desktop.nix
+      ../../modules/desktop.nix
       # Hourly snapper snapshots of /home.
-      ./modules/snapshots.nix
+      ../../modules/snapshots.nix
     ];
 
   # This system is built from flake.nix; inputs are pinned in flake.lock.
@@ -146,7 +146,7 @@
   home-manager.useUserPackages = true;
   # If an unmanaged file is in the way, rename it to *.hm-backup instead of failing activation.
   home-manager.backupFileExtension = "hm-backup";
-  home-manager.users.marius = import ./home;
+  home-manager.users.marius = import ../../home/desktop.nix;
 
   # System-wide packages (gh is managed by Home Manager in home/).
   environment.systemPackages = with pkgs; [
