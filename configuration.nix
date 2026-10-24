@@ -124,6 +124,7 @@ in
       # thunderbird
       spotify
       claude-code
+      discord
     ];
   };
 
@@ -244,6 +245,20 @@ in
       };
     };
 
+    programs.tmux = {
+      enable = true;
+      sensibleOnTop = true;
+      keyMode = "vi";
+      historyLimit = 10000;
+    };
+
+    programs.neovim = {
+      enable = true;
+      defaultEditor = false;
+      viAlias = true;
+      vimAlias = true;
+    };
+
     programs.zsh = {
       enable = true;
       autosuggestion.enable = true;
@@ -279,6 +294,15 @@ in
     gh
     pciutils
     inxi
+    htop
+    ripgrep
+    fd
+    fzf
+    unzip
+    zip
+    wget
+    curl
+    lazygit
     # Restores GNOME's system tray (AppIndicator/KStatusNotifierItem icons,
     # e.g. Spotify's tray icon) which GNOME Shell dropped natively.
     gnomeExtensions.appindicator
