@@ -4,7 +4,7 @@
 { config, pkgs, ... }:
 
 {
-  # Home Manager and the claude-code overlay are wired in via flake.nix.
+  # Home Manager, overlays and allowUnfree are wired in via flake.nix (shared with the MacBook).
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -78,7 +78,7 @@
     LC_TIME = "en_GB.UTF-8";
   };
 
-  # Configure keymap in X11 (Hyprland's own layout is set in home/hyprland.nix)
+  # Configure keymap in X11 (Hyprland's own layout is set in home/linux/hyprland.lua)
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -132,20 +132,14 @@
     description = "Marius";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.bashInteractive;
-    # Personal apps live in home.packages (home/default.nix).
+    # Personal apps live in home.packages (home/common, home/linux).
   };
 
   # Install firefox.
   programs.firefox.enable = true;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # Home Manager: per-user dotfiles, tracked in this same repo.
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  # If an unmanaged file is in the way, rename it to *.hm-backup instead of failing activation.
-  home-manager.backupFileExtension = "hm-backup";
+  # Home Manager: per-user dotfiles, tracked in this same repo. allowUnfree,
+  # overlays and the shared HM settings are set for both hosts in flake.nix.
   home-manager.users.marius = import ../../home/desktop.nix;
 
   # System-wide packages (gh is managed by Home Manager in home/).

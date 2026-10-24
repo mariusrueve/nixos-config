@@ -70,7 +70,7 @@
 
   # Two GPUs: AMD iGPU (PCI 10:00.0) and the RTX 4070 (PCI 01:00.0), which
   # drives the monitor. /dev/dri/cardN numbering is not stable across boots, so
-  # give the NVIDIA card a fixed name for AQ_DRM_DEVICES (see home/hyprland.nix).
+  # give the NVIDIA card a fixed name for AQ_DRM_DEVICES (see home/linux/hyprland.nix).
   services.udev.extraRules = ''
     KERNEL=="card*", KERNELS=="0000:01:00.0", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/nvidia-gpu"
   '';

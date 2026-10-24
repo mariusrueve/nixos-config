@@ -1,4 +1,4 @@
--- Hyprland config (Lua, Hyprland >= 0.55). Appended by home/hyprland.nix to the
+-- Hyprland config (Lua, Hyprland >= 0.55). Appended by home/linux/hyprland.nix to the
 -- generated ~/.config/hypr/hyprland.lua, after `local colors = require(...)`
 -- (the Catppuccin Mocha palette: colors.blue = "rgb(89b4fa)", colors.blueAlpha = "89b4fa", ...).
 -- Reference: https://wiki.hypr.land/Configuring/Start/
