@@ -86,8 +86,23 @@ in
     tray = "auto";
   };
 
-  # Tray applet for network. (The Bluetooth applet is started by the system's
-  # XDG autostart entry from services.blueman; a second instance here would
-  # just exit.)
-  services.network-manager-applet.enable = true;
+  # The network (nm-applet) and Bluetooth (blueman) tray applets are started
+  # by their XDG autostart entries, installed system-wide in
+  # modules/desktop.nix. Enabling the Home Manager services as well would only
+  # start duplicates.
+
+  # Night light: warmer screen from 20:00 to 07:00.
+  services.hyprsunset = {
+    enable = true;
+    settings.profile = [
+      {
+        time = "7:00";
+        identity = true;
+      }
+      {
+        time = "20:00";
+        temperature = 4000;
+      }
+    ];
+  };
 }

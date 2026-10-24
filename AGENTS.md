@@ -12,10 +12,11 @@ here to help troubleshoot and evolve the config.
 | `flake.lock` | Exact pinned revisions of all inputs. Only changes via `nix flake update`. |
 | `configuration.nix` | Core system config (boot, fs, nix, locale, audio, NVIDIA, users, sudo rule). Imports `modules/` and sets `home-manager.users.marius = import ./home`. |
 | `modules/desktop.nix` | System side of the Hyprland desktop: Hyprland (UWSM), greetd + tuigreet, portals, gnome-keyring, NVIDIA udev symlink, Bluetooth/gvfs/udisks, fonts, kept GNOME apps. |
+| `modules/snapshots.nix` | snapper: hourly btrfs snapshots of `/home` (24 hourly / 7 daily / 4 weekly) into the `/home/.snapshots` subvolume; btrfs-assistant GUI. Same disk, so not a backup against disk failure. |
 | `home/default.nix` | Home Manager entry: shell, editors, git/gh, direnv, tmux; imports the files below. |
 | `home/hyprland.nix` + `home/hyprland.lua` | Hyprland user config. Hyprland 0.55 uses a **Lua** config; `hyprland.lua` holds monitors, look, keybinds and rules and is appended to the generated `~/.config/hypr/hyprland.lua`. Session env vars go to `~/.config/uwsm/env*`, not into the Lua. |
 | `home/waybar.nix` | Waybar layout + CSS. |
-| `home/services.nix` | hyprpaper, hyprlock, hypridle, swaync, swayosd, cliphist, polkit agent, udiskie, tray applets. |
+| `home/services.nix` | hyprpaper, hyprlock, hypridle, hyprsunset (night light), swaync, swayosd, cliphist, polkit agent, udiskie. The nm-applet/blueman tray applets come from system XDG autostart; don't also enable their Home Manager services (duplicates). |
 | `home/apps.nix` | kitty, rofi, wlogout. |
 | `home/theme.nix` | Catppuccin Mocha/blue, cursors, GTK/Qt, icons. |
 | `wallpapers/` | Wallpaper used by hyprpaper and hyprlock. |

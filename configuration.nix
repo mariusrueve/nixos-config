@@ -10,6 +10,8 @@
       ./hardware-configuration.nix
       # Hyprland desktop: greeter, portals, GPU env, desktop services.
       ./modules/desktop.nix
+      # Hourly snapper snapshots of /home.
+      ./modules/snapshots.nix
     ];
 
   # This system is built from flake.nix; inputs are pinned in flake.lock.
@@ -43,6 +45,10 @@
     enable = true;
     fileSystems = [ "/" ];
   };
+
+  # Compressed swap in RAM (zstd, up to 50% of RAM), used before the disk swap
+  # partition, which stays as overflow.
+  zramSwap.enable = true;
 
   # Firmware updates (UEFI, SSD, peripherals) via `fwupdmgr`.
   services.fwupd.enable = true;

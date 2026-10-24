@@ -73,8 +73,9 @@
     shellOptions = [ "histappend" "checkwinsize" "globstar" ];
 
     shellAliases = {
-      ll = "ls -la";
-      la = "ls -A";
+      # Same meaning as before, now via eza (icons + git status column).
+      ll = "eza -la";
+      la = "eza -A";
       ".." = "cd ..";
       gs = "git status";
     };
@@ -85,4 +86,18 @@
     enable = true;
     enableBashIntegration = true;
   };
+
+  # Modern CLI tools. catppuccin themes bat, btop and yazi.
+  # `ls`/`lt`/`lla` aliases come from eza's shell integration.
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    git = true;
+  };
+  programs.bat.enable = true;
+  # `z <part of a dir name>` jumps to frequently used directories.
+  programs.zoxide.enable = true;
+  programs.btop.enable = true;
+  # Terminal file manager; `y` opens it and cds into the last directory on exit.
+  programs.yazi.enable = true;
 }
