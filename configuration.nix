@@ -1,34 +1,57 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+# System + Home Manager configuration for host "desktop".
+# Option docs: configuration.nix(5), home-configuration.nix(5), https://search.nixos.org/options
 
 { config, pkgs, ... }:
 
-let
-  # Home Manager tracked against nixos-unstable, matching this system's channel.
-  home-manager = builtins.fetchTarball {
-    url = "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-  };
-in
 {
+  # Home Manager and the claude-code overlay are wired in via flake.nix.
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      (import "${home-manager}/nixos")
+      # Hyprland desktop: greeter, portals, GPU env, desktop services.
+      ./modules/desktop.nix
     ];
+
+  # This system is built from flake.nix; inputs are pinned in flake.lock.
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Keep the Nix store from growing without bound.
+  nix.settings.auto-optimise-store = true;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
+  # Cap boot entries so old kernels/initrds can't fill the 1 GiB ESP.
+  boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # btrfs: transparent compression and no access-time writes. Set here rather
+  # than in hardware-configuration.nix, which nixos-generate-config overwrites.
+  # Compression only applies to data written after the remount/reboot.
+  fileSystems = {
+    "/".options = [ "compress=zstd" "noatime" ];
+    "/home".options = [ "compress=zstd" "noatime" ];
+    "/nix".options = [ "compress=zstd" "noatime" ];
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # Monthly checksum scrub. All subvolumes share one filesystem, so "/" covers them.
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [ "/" ];
+  };
 
-  # Enable networking
+  # Firmware updates (UEFI, SSD, peripherals) via `fwupdmgr`.
+  services.fwupd.enable = true;
+
+  # Lets prebuilt, non-Nix binaries (npm/pip wheels, downloaded tools) find a
+  # dynamic linker and common libraries.
+  programs.nix-ld.enable = true;
+
+  networking.hostName = "desktop";
   networking.networkmanager.enable = true;
 
   # Set your time zone.
@@ -49,17 +72,7 @@ in
     LC_TIME = "en_GB.UTF-8";
   };
 
-  # Enable the GNOME Desktop Environment.
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Required for Home Manager's dconf module to apply GNOME settings.
-  programs.dconf.enable = true;
-
-  # Monospace font used by Alacritty and Helix (via the terminal).
-  fonts.packages = with pkgs; [ nerd-fonts.jetbrains-mono ];
-
-  # Configure keymap in X11
+  # Configure keymap in X11 (Hyprland's own layout is set in home/hyprland.nix)
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -76,12 +89,7 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    # jack.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
 
   # Enable OpenGL
   hardware.graphics.enable = true;
@@ -93,8 +101,9 @@ in
     # Modesetting is required.
     modesetting.enable = true;
 
-    # Enable power management (do not disable this unless you have a reason to).
-    powerManagement.enable = false;
+    # Save VRAM across suspend (nvidia-suspend/resume services). Without it,
+    # Wayland sessions commonly resume to a black or corrupted screen.
+    powerManagement.enable = true;
     # Fine-grained power management. Turns off GPU when not in use.
     # Only needed on laptops with hybrid (iGPU + dGPU) setups.
     powerManagement.finegrained = false;
@@ -111,15 +120,12 @@ in
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # Register zsh as a valid login shell and make it the default for marius.
-  programs.zsh.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."marius" = {
     isNormalUser = true;
     description = "Marius";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.zsh;
+    shell = pkgs.bashInteractive;
     packages = with pkgs; [
       # thunderbird
       spotify
@@ -137,161 +143,13 @@ in
   # Home Manager: per-user dotfiles, tracked in this same repo.
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.marius = { pkgs, ... }: {
-    home.stateVersion = "26.05";
+  # If an unmanaged file is in the way, rename it to *.hm-backup instead of failing activation.
+  home-manager.backupFileExtension = "hm-backup";
+  home-manager.users.marius = import ./home;
 
-    programs.helix = {
-      enable = true;
-      settings = {
-        theme = "catppuccin_mocha";
-        editor = {
-          line-number = "relative";
-          cursorline = true;
-          bufferline = "multiple";
-          color-modes = true;
-        };
-      };
-    };
-
-    programs.alacritty = {
-      enable = true;
-      settings = {
-        window = {
-          padding = { x = 8; y = 8; };
-          opacity = 1.0;
-        };
-        scrolling.history = 10000;
-
-        font = {
-          size = 11;
-          normal.family = "JetBrainsMono Nerd Font";
-          bold.family = "JetBrainsMono Nerd Font";
-          italic.family = "JetBrainsMono Nerd Font";
-          bold_italic.family = "JetBrainsMono Nerd Font";
-        };
-
-        # Catppuccin Mocha
-        colors = {
-          primary = {
-            background = "#1e1e2e";
-            foreground = "#cdd6f4";
-            dim_foreground = "#7f849c";
-          };
-          cursor = {
-            text = "#1e1e2e";
-            cursor = "#f5e0dc";
-          };
-          vi_mode_cursor = {
-            text = "#1e1e2e";
-            cursor = "#b4befe";
-          };
-          search.matches = {
-            foreground = "#1e1e2e";
-            background = "#a6adc8";
-          };
-          search.focused_match = {
-            foreground = "#1e1e2e";
-            background = "#a6e3a1";
-          };
-          footer_bar = {
-            background = "#313244";
-            foreground = "#cdd6f4";
-          };
-          hints.start = {
-            foreground = "#1e1e2e";
-            background = "#f9e2af";
-          };
-          hints.end = {
-            foreground = "#1e1e2e";
-            background = "#a6adc8";
-          };
-          selection = {
-            text = "#1e1e2e";
-            background = "#f5e0dc";
-          };
-          normal = {
-            black = "#45475a";
-            red = "#f38ba8";
-            green = "#a6e3a1";
-            yellow = "#f9e2af";
-            blue = "#89b4fa";
-            magenta = "#f5c2e7";
-            cyan = "#94e2d5";
-            white = "#bac2de";
-          };
-          bright = {
-            black = "#585b70";
-            red = "#f38ba8";
-            green = "#a6e3a1";
-            yellow = "#f9e2af";
-            blue = "#89b4fa";
-            magenta = "#f5c2e7";
-            cyan = "#94e2d5";
-            white = "#a6adc8";
-          };
-        };
-      };
-    };
-
-    # GNOME: dark color scheme + closest native accent to Catppuccin Mocha's blue.
-    dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-        accent-color = "blue";
-        monospace-font-name = "JetBrainsMono Nerd Font 11";
-      };
-      "org/gnome/shell" = {
-        enabled-extensions = [ "appindicatorsupport@rgcjonas.gmail.com" ];
-      };
-    };
-
-    programs.tmux = {
-      enable = true;
-      sensibleOnTop = true;
-      keyMode = "vi";
-      historyLimit = 10000;
-    };
-
-    programs.neovim = {
-      enable = true;
-      defaultEditor = false;
-      viAlias = true;
-      vimAlias = true;
-    };
-
-    programs.zsh = {
-      enable = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-      enableCompletion = true;
-
-      history = {
-        size = 10000;
-        save = 10000;
-        ignoreDups = true;
-        share = true;
-      };
-
-      shellAliases = {
-        ll = "ls -la";
-        la = "ls -A";
-        ".." = "cd ..";
-        gs = "git status";
-      };
-
-      initContent = ''
-        autoload -Uz promptinit
-        promptinit
-        PROMPT='%F{blue}%~%f %F{green}❯%f '
-      '';
-    };
-  };
-
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
+  # System-wide packages (gh is managed by Home Manager in home/).
   environment.systemPackages = with pkgs; [
     git
-    gh
     pciutils
     inxi
     htop
@@ -303,34 +161,7 @@ in
     wget
     curl
     lazygit
-    # Restores GNOME's system tray (AppIndicator/KStatusNotifierItem icons,
-    # e.g. Spotify's tray icon) which GNOME Shell dropped natively.
-    gnomeExtensions.appindicator
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
 
   # Allow running `nixos-rebuild` without re-entering the sudo password each
   # time, so config changes can be applied in one step. Scoped to exactly
@@ -347,23 +178,8 @@ in
     }
   ];
 
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "26.05"; # Did you read the comment?
-
+  # The NixOS release this machine was first installed with; keeps stateful data
+  # (databases etc.) compatible. It does NOT control the package versions and must
+  # never be bumped on upgrades. See the `system.stateVersion` option docs.
+  system.stateVersion = "26.05";
 }
