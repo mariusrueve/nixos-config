@@ -1,10 +1,10 @@
 # Background pieces of the desktop. All of these run as systemd user services
 # bound to graphical-session.target, which UWSM starts with Hyprland.
 
-{ ... }:
+{ pkgs, ... }:
 
 let
-  wallpaper = ../../wallpapers/shaded-landscape.png;
+  wallpaper = import ../../wallpapers/catppuccin-nix.nix { inherit pkgs; };
   dpms = action: "hyprctl dispatch 'hl.dsp.dpms({ action = \"${action}\" })'";
 in
 {
