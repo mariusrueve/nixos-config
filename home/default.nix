@@ -10,21 +10,24 @@
     ./services.nix
     ./apps.nix
     ./theme.nix
+    ./neovim # editor (nixvim): home/neovim/
   ];
 
   home.stateVersion = "26.05";
 
-  # Theme comes from catppuccin (home/theme.nix).
-  programs.helix = {
-    enable = true;
-    defaultEditor = true;
-    settings.editor = {
-      line-number = "relative";
-      cursorline = true;
-      bufferline = "multiple";
-      color-modes = true;
-    };
-  };
+  # ── Your programs ──────────────────────────────────────────────────────
+  # Add a package name here, then apply with:
+  #   cd ~/nixos-config && sudo nixos-rebuild switch --flake .
+  # Find names at https://search.nixos.org/packages or `nix search nixpkgs <name>`.
+  # Programs with their own `programs.<name>` option (configured below or in
+  # apps.nix) don't need to be listed here.
+  home.packages = with pkgs; [
+    fastfetch
+    spotify
+    discord
+    claude-code # from the claude-code-nix overlay (always up to date)
+    # thunderbird
+  ];
 
   # Git config lives in ~/.config/git/config. User identity stays in ~/.gitconfig.
   programs.git = {
@@ -52,13 +55,6 @@
     sensibleOnTop = true;
     keyMode = "vi";
     historyLimit = 10000;
-  };
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = false;
-    viAlias = true;
-    vimAlias = true;
   };
 
   programs.bash = {

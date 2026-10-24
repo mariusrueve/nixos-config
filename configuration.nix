@@ -132,12 +132,7 @@
     description = "Marius";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.bashInteractive;
-    packages = with pkgs; [
-      # thunderbird
-      spotify
-      claude-code
-      discord
-    ];
+    # Personal apps live in home.packages (home/default.nix).
   };
 
   # Install firefox.

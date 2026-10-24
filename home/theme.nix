@@ -1,5 +1,5 @@
 # Look & feel: Catppuccin Mocha with a blue accent everywhere.
-# catppuccin/nix themes every enabled program it supports (kitty, helix, tmux,
+# catppuccin/nix themes every enabled program it supports (kitty, tmux, zathura,
 # rofi, waybar, hyprland, hyprlock, swaync, wlogout, fzf, starship, ...).
 
 { pkgs, ... }:

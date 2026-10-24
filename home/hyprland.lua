@@ -25,7 +25,7 @@ local function app(cmd) return "uwsm app -- " .. cmd end
 
 local terminal    = app("kitty")
 local fileManager = app("nautilus --new-window")
-local browser     = app("firefox")
+local browser     = app("chromium") -- Firefox stays installed as a backup
 local menu        = "rofi -show drun -run-command 'uwsm app -- {cmd}'"
 
 -----------------------

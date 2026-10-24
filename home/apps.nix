@@ -1,8 +1,42 @@
-# Terminal, launcher and power menu. Colours come from catppuccin (home/theme.nix).
+# Terminal, launcher, power menu and browser. Colours come from catppuccin (home/theme.nix).
 
 { pkgs, ... }:
 
+let
+  browser = "chromium-browser.desktop";
+in
 {
+  # Default browser. Runs natively on Wayland via NIXOS_OZONE_WL
+  # (modules/desktop.nix); catppuccin adds its Mocha theme extension.
+  # Firefox (programs.firefox in configuration.nix) stays installed as a backup.
+  programs.chromium.enable = true;
+
+  # Keyboard-driven PDF viewer used by vimtex for LaTeX (SyncTeX jumps).
+  # Double-clicked PDFs still open in Papers.
+  programs.zathura = {
+    enable = true;
+    options = {
+      selection-clipboard = "clipboard";
+      recolor = false;
+    };
+  };
+
+  # Default apps. Home Manager now owns ~/.config/mimeapps.list, so anything
+  # another program would write there must be declared here instead.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = browser;
+      "application/xhtml+xml" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/unknown" = browser;
+      # Claude Code login links (registered by Claude Code itself).
+      "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
+    };
+  };
+
   programs.kitty = {
     enable = true;
     font = {
