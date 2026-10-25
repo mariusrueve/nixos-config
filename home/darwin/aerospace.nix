@@ -43,14 +43,15 @@ let
     };
 
   # Option+N workspace, +Shift move window and follow, +Cmd move silently
-  # (desktop: Super+Alt+N).
-  workspaces = map toString [ 1 2 3 4 5 6 7 8 9 ];
+  # (desktop: Super+Alt+N). Key 0 is workspace 10, as on the desktop.
+  workspaces = map toString [ 1 2 3 4 5 6 7 8 9 10 ];
   workspaceBinds = builtins.foldl' (acc: n:
+    let k = if n == "10" then "0" else n; in
     acc
     // {
-      "alt-${n}" = "workspace ${n}";
-      "alt-shift-${n}" = [ "move-node-to-workspace ${n}" "workspace ${n}" ];
-      "alt-cmd-${n}" = "move-node-to-workspace ${n}";
+      "alt-${k}" = "workspace ${n}";
+      "alt-shift-${k}" = [ "move-node-to-workspace ${n}" "workspace ${n}" ];
+      "alt-cmd-${k}" = "move-node-to-workspace ${n}";
     }) { } workspaces;
 in
 {
@@ -67,6 +68,9 @@ in
       default-root-container-orientation = "auto";
       # Mouse follows focus when switching monitors.
       on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
+      # Workspace 10 (Option+0) lives on the laptop screen when an external
+      # monitor is attached; with the lid display alone it is just another workspace.
+      workspace-to-monitor-force-assignment."10" = "built-in";
 
       # Same spacing as Hyprland (gaps_in 4 per side = 8 between windows, gaps_out 8).
       gaps = {
