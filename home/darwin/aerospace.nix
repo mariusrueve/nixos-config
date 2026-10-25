@@ -5,7 +5,8 @@
 #
 # Differences from Hyprland: the layout is an i3-style tree rather than dwindle
 # (new windows split the focused container), there is no toggleable scratchpad
-# (Option+S is a plain workspace "S"), and notifications/colour picker have no binds.
+# (Option+S is a plain workspace "S"), notifications/colour picker have no binds,
+# and Option+Tab is workspace back-and-forth (Super+Tab on Hyprland: rofi window list).
 
 { ... }:
 

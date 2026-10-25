@@ -3,6 +3,7 @@
   imports = [
     ./common
     ./common/kitty.nix
+    ./common/ssh.nix
     ./linux
   ];
 }

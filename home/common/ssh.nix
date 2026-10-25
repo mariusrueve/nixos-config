@@ -1,7 +1,10 @@
-# SSH client on the Mac. Keys live in 1Password (Settings → Developer →
-# "Use the SSH agent"), so every connection is approved with Touch ID.
+# SSH client on the desktop and the Mac (imported per host, like kitty.nix;
+# hessen itself doesn't need it). Keys live in 1Password (Settings → Developer →
+# "Use the SSH agent"), so every connection is approved in 1Password (Touch ID on the Mac).
 # University servers: bari is the jump host, hessen the dev machine
 # (Nix environment there: home/hessen.nix).
+
+{ pkgs, ... }:
 
 let
   # Public half of the 1Password key "SSH Key" (uni servers + Gerrit). With
@@ -20,7 +23,11 @@ in
     # OpenSSH directive names, written as-is to ~/.ssh/config.
     settings = {
       "*" = {
-        IdentityAgent = ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
+        IdentityAgent =
+          if pkgs.stdenv.isDarwin then
+            ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"''
+          else
+            "~/.1password/agent.sock";
       };
 
       bari = {

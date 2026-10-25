@@ -23,6 +23,7 @@ let
     wifi = '''';
     offline = '''';
     bluetooth = '''';
+    bluetoothOff = ''󰂲''; # md-bluetooth_off
     cpu = '''';
     memory = ''󰍛''; # md-memory
     bell = '''';
@@ -124,7 +125,7 @@ in
 
       bluetooth = {
         format = i.bluetooth;
-        format-disabled = "󰂲";
+        format-disabled = i.bluetoothOff;
         format-connected = "${i.bluetooth} {num_connections}";
         tooltip-format-connected = "{device_enumerate}";
         tooltip-format-enumerate-connected = "{device_alias}";

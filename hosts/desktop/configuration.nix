@@ -142,20 +142,15 @@
   # overlays and the shared HM settings are set for both hosts in flake.nix.
   home-manager.users.marius = import ../../home/desktop.nix;
 
-  # System-wide packages (gh is managed by Home Manager in home/).
+  # System-wide basics (also usable as root). Personal CLI tools live in
+  # home/common/default.nix, so they exist on every host.
   environment.systemPackages = with pkgs; [
     git
     pciutils
     inxi
-    htop
-    ripgrep
-    fd
-    fzf
     unzip
     zip
-    wget
     curl
-    lazygit
   ];
 
   # Allow running `nixos-rebuild` without re-entering the sudo password each

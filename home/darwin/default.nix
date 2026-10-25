@@ -5,7 +5,6 @@
 {
   imports = [
     ./aerospace.nix
-    ./ssh.nix
   ];
 
   # macOS-only CLI programs. GUI apps: homebrew.casks in hosts/macbook/default.nix.

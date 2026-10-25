@@ -37,6 +37,27 @@
   # Home Manager: same shared modules as the desktop, plus home/darwin/.
   home-manager.users.marius = import ../../home/macbook.nix;
 
+  # Weekly GC, same policy as the desktop. nix-darwin's nix.gc needs
+  # nix.enable, which is off (Determinate manages Nix), so a plain launchd job.
+  launchd.daemons.nix-gc = {
+    serviceConfig = {
+      ProgramArguments = [
+        "/nix/var/nix/profiles/default/bin/nix-collect-garbage"
+        "--delete-older-than"
+        "30d"
+      ];
+      StartCalendarInterval = [
+        {
+          Weekday = 0;
+          Hour = 3;
+          Minute = 0;
+        }
+      ];
+      StandardOutPath = "/var/log/nix-gc.log";
+      StandardErrorPath = "/var/log/nix-gc.log";
+    };
+  };
+
   # Touch ID for sudo (also inside tmux, via pam_reattach).
   security.pam.services.sudo_local = {
     touchIdAuth = true;

@@ -1,5 +1,5 @@
 # Neovim, configured entirely in Nix with nixvim (https://nix-community.github.io/nixvim/).
-# Change anything here, then `sudo nixos-rebuild switch --flake .` and restart nvim.
+# Change anything here, rebuild (nixos-rebuild / darwin-rebuild / home-manager switch) and restart nvim.
 #
 # Cheat sheet (leader = Space; press Space and wait, which-key shows everything):
 #   Space e        file tree (neo-tree)          Space ff / fg   find file / grep in project
@@ -7,7 +7,7 @@
 #   gd / gr / K    definition / references / docs   Space ca / cr   code action / rename
 #   [d / ]d        previous / next diagnostic    Space cf        format now (Space uf: toggle format-on-save)
 #   Space db / dc  breakpoint / start-continue   Space du        debugger UI
-#   Space ll / lv  LaTeX: compile (continuous) / view PDF in zathura
+#   Space ll / lv  LaTeX: compile (continuous) / view PDF (zathura / Skim)
 #   gcc / gc       comment line / selection      Ctrl-h/j/k/l    move between splits
 #   Shift-h / l    previous / next buffer (tab)  Space bd        close buffer
 # New to Vim motions? Run `:Tutor` inside nvim (30 minutes, worth it).
@@ -56,7 +56,7 @@
       maplocalleader = " ";
     };
 
-    # System clipboard via wl-clipboard: y/p work with other apps.
+    # System clipboard (wl-clipboard / pbcopy / OSC 52 over SSH): y/p work with other apps.
     clipboard.register = "unnamedplus";
 
     opts = {
@@ -174,7 +174,6 @@
         event = "TextYankPost";
         callback.__raw = "function() vim.hl.on_yank() end";
       }
-      # Match the guide to rustfmt's max_width.
     ];
   };
 }
