@@ -156,7 +156,7 @@ Rollback if something breaks:
 - Git and gh are managed by Home Manager (`programs.git`, `programs.gh` with
   `gitCredentialHelper`). Do not run `gh auth setup-git`: it writes a hardcoded
   `/nix/store/...` path into `~/.gitconfig`, which breaks after garbage collection.
-  `~/.gitconfig` holds only the user identity.
+  The user identity (name + GitHub noreply email) is set in `programs.git.settings.user`; keep `~/.gitconfig` absent so it cannot override it.
 - Prebuilt non-Nix binaries work via `programs.nix-ld` (desktop). For per-project
   toolchains, prefer a flake `devShell` from `templates/` + `.envrc` with `use flake`
   (direnv + nix-direnv are set up on both machines) over adding packages globally.

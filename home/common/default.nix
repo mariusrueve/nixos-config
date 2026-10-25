@@ -32,10 +32,18 @@
     accent = "blue";
   };
 
-  # Git config lives in ~/.config/git/config. User identity stays in ~/.gitconfig.
+  # Git config lives in ~/.config/git/config. The identity uses GitHub's noreply
+  # address (id+login), which GitHub always links to the account; without it the
+  # Mac fell back to marius@<hostname> and commits showed up unlinked.
   programs.git = {
     enable = true;
-    settings.init.defaultBranch = "main";
+    settings = {
+      init.defaultBranch = "main";
+      user = {
+        name = "Marius Rüve";
+        email = "44000950+mariusrueve@users.noreply.github.com";
+      };
+    };
   };
 
   # gh as git's credential helper for GitHub. Home Manager regenerates the
