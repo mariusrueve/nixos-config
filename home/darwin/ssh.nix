@@ -8,24 +8,25 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    # OpenSSH directive names, written as-is to ~/.ssh/config.
+    settings = {
       "*" = {
-        identityAgent = ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
+        IdentityAgent = ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
       };
 
       bari = {
-        hostname = "bari.zbh.uni-hamburg.de";
-        port = 7373;
-        user = "mrueve";
+        HostName = "bari.zbh.uni-hamburg.de";
+        Port = 7373;
+        User = "mrueve";
       };
 
       # The short name is resolved by bari. ForwardAgent so git on hessen can
       # push to Gerrit with the 1Password key (no private key on the server).
       hessen = {
-        hostname = "hessen";
-        user = "mrueve";
-        proxyJump = "bari";
-        forwardAgent = true;
+        HostName = "hessen";
+        User = "mrueve";
+        ProxyJump = "bari";
+        ForwardAgent = true;
       };
     };
   };
