@@ -3,7 +3,16 @@
 # University servers: bari is the jump host, hessen the dev machine
 # (Nix environment there: home/hessen.nix).
 
+let
+  # Public half of the 1Password key "SSH Key" (uni servers + Gerrit). With
+  # IdentitiesOnly, ssh asks the agent for just this key instead of offering
+  # every 1Password key; several refused offers trip bari's
+  # "Too many authentication failures" and a temporary block.
+  zbhKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINevAV1Fz2FujIzF4F9V/WQ2Fobf/8cHDyTqjucY0suh";
+in
 {
+  home.file.".ssh/zbh.pub".text = zbhKey + "\n";
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
@@ -18,6 +27,8 @@
         HostName = "bari.zbh.uni-hamburg.de";
         Port = 7373;
         User = "mrueve";
+        IdentityFile = "~/.ssh/zbh.pub";
+        IdentitiesOnly = true;
       };
 
       # The short name is resolved by bari. ForwardAgent so git on hessen can
@@ -27,6 +38,8 @@
         User = "mrueve";
         ProxyJump = "bari";
         ForwardAgent = true;
+        IdentityFile = "~/.ssh/zbh.pub";
+        IdentitiesOnly = true;
       };
     };
   };

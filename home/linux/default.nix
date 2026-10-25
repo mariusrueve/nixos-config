@@ -15,6 +15,6 @@
   home.packages = with pkgs; [
     spotify
     discord
-    # thunderbird
+    mattermost-desktop
   ];
 }
