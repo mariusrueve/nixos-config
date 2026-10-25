@@ -66,6 +66,8 @@
       signcolumn = "yes";
       scrolloff = 8;
       wrap = false;
+      # Line-length guide at 88 (ruff/black default). Rust gets 100 below, rustfmt's limit.
+      colorcolumn = "88";
 
       # 4-space indentation by default; filetype plugins / editorconfig override per language.
       expandtab = true;
@@ -112,6 +114,12 @@
       {
         event = "TextYankPost";
         callback.__raw = "function() vim.hl.on_yank() end";
+      }
+      # Match the guide to rustfmt's max_width.
+      {
+        event = "FileType";
+        pattern = "rust";
+        command = "setlocal colorcolumn=100";
       }
     ];
   };
