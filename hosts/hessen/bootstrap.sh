@@ -43,9 +43,11 @@ fi
 
 # 3. This repo + Home Manager
 [[ -d $REPO/.git ]] || git clone https://github.com/mariusrueve/nixos-config.git "$REPO"
+# NIX_CONFIG instead of a flag: the home-manager CLI runs its own `nix build`,
+# and ~/.config/nix/nix.conf only exists after the first switch.
 in_env ". ~/.nix-profile/etc/profile.d/nix.sh && cd $REPO && git pull --ff-only &&
-  nix --extra-experimental-features 'nix-command flakes' run home-manager/release-26.05 -- \
-    switch -b hm-backup --flake .#mrueve@hessen"
+  export NIX_CONFIG='experimental-features = nix-command flakes' &&
+  nix run home-manager/release-26.05 -- switch -b hm-backup --flake .#mrueve@hessen"
 
 # 4. NFS home: back up the old setup, then only the hook remains
 if ! grep -q 'nixos-config: enter the Nix environment' "$NFS_HOME/.bashrc" 2>/dev/null; then
