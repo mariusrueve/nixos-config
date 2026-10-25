@@ -34,7 +34,12 @@ if [[ ! -x $CHROOT ]]; then
   mv "$CHROOT.part" "$CHROOT"
 fi
 
-in_env() { env HOME="$NIXHOME" IN_NIX_CHROOT=1 "$CHROOT" "$BASE/nix" bash -c "$1"; }
+# The login session exports XDG_*_HOME pointing at the NFS home; drop them so
+# Nix and Home Manager use $NIXHOME/.config etc. (home/hessen.nix: xdg.enable).
+in_env() {
+  env -u XDG_CONFIG_HOME -u XDG_DATA_HOME -u XDG_CACHE_HOME -u XDG_STATE_HOME \
+    HOME="$NIXHOME" IN_NIX_CHROOT=1 "$CHROOT" "$BASE/nix" bash -c "$1"
+}
 
 # 2. Nix (single user, no daemon; profile setup comes from Home Manager)
 if [[ ! -e $NIXHOME/.nix-profile/bin/nix ]]; then

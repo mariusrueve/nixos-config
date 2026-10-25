@@ -152,6 +152,10 @@ Login: Mac → `ssh hessen` (via `bari.zbh.uni-hamburg.de:7373`). Keys in 1Passw
   - Job scripts `source .venv/bin/activate`.
   - Don't `qsub -V` from the Nix shell, because PATH would point into `/nix/store`.
   - `/local` is per node: jobs must use `/work` or `/scratch`.
+- **Pitfalls found during setup:**
+  - The login session (PAM) exports `XDG_CONFIG_HOME` etc. pointing at the NFS home. `xdg.enable` in `home/hessen.nix` exports them again inside the env.
+    Without it, git, nvim and even `nix.conf` are not found.
+  - hessen's AppArmor profile only lets `/usr/bin/curl -o` write to `/tmp`. Use `curl … > file` instead.
 - `.space` files (SQLite) are slow over NFS: work on them in `/local/mrueve`. The nightly cron rsync to `/work` backs them up.
 
 ## Troubleshooting tips
