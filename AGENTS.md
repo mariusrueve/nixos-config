@@ -28,6 +28,7 @@ building or activating anything.
 | `home/desktop.nix`, `home/macbook.nix` | Per-host Home Manager entry points: `common` + `common/kitty.nix` + `linux` or `darwin`. |
 | `home/hessen.nix` | Home Manager for the uni server: `common` (no kitty), HOME `/local/mrueve/home`, `targets.genericLinux`, uni git email for Gerrit, uv. |
 | `hosts/hessen/bootstrap.sh` | One-time, root-free setup on hessen (nix-user-chroot, Nix, Home Manager, NFS `~/.bashrc` hook). |
+| `hosts/hessen/backup.sh` | Nightly cron snapshot of `/local/mrueve/home` to `/work/.../backups/hessen` (copy lives in `/local/mrueve/scripts/`). |
 | `home/common/default.nix` | Shared: **`home.packages` (the place for personal CLI programs on both machines)**, bash + starship, git/gh, direnv, tmux, eza/bat/zoxide/btop/yazi, catppuccin. |
 | `home/common/kitty.nix` | kitty (shared; a few `isDarwin` tweaks). On macOS `package = null`: the app is the Homebrew cask, because nixpkgs' wrapped `kitty.app` registers with LaunchServices without a PID and AeroSpace never tiles it. Keep it that way; Option+Enter opens `/Applications/kitty.app` by full path. |
 | `home/common/neovim/` | The editor: Neovim via **nixvim** (`programs.nixvim`), `$EDITOR`. `default.nix` (options, keymaps, cheat sheet, catppuccin), `ui.nix`, `lsp.nix` (servers, blink-cmp, treesitter, conform format-on-save), `languages.nix` (vimtex with zathura on Linux / Skim on macOS, rustaceanvim, markdown), `dap.nix` (debugpy, codelldb). All binaries from Nix, no Mason; `nixpkgs.useGlobalPackages = true`. Inside a HM module `lib.nixvim` is unavailable: use `action.__raw = "..."` for Lua. Test headless before switching: point `XDG_CONFIG_HOME` at a dir with `nvim -> <built home-manager-files>/.config/nvim` and run the built `nvim --headless`. Known nixvim bug: `plugins.treesitter.settings.highlight.disable` is ignored (TeX workaround via autocmd in `lsp.nix`). |
@@ -156,7 +157,11 @@ Login: Mac → `ssh hessen` (via `bari.zbh.uni-hamburg.de:7373`). Keys in 1Passw
   - The login session (PAM) exports `XDG_CONFIG_HOME` etc. pointing at the NFS home. `xdg.enable` in `home/hessen.nix` exports them again inside the env.
     Without it, git, nvim and even `nix.conf` are not found.
   - hessen's AppArmor profile only lets `/usr/bin/curl -o` write to `/tmp`. Use `curl … > file` instead.
-- `.space` files (SQLite) are slow over NFS: work on them in `/local/mrueve`. The nightly cron rsync to `/work` backs them up.
+- `.space` files (SQLite) are slow over NFS, so work happens in `/local/mrueve/home` (`phd/`, `knowledge/`, `notes/`).
+  - Backup: `hosts/hessen/backup.sh`, deployed as `/local/mrueve/scripts/hessen-backup.sh` (cron 02:30).
+    It writes daily rsync snapshots with hardlinks to the previous day, keeps 7, and goes to `/work/stud2022/mrueve/backups/hessen` (with `backup.log`).
+  - Excluded: `.cache` and Nix state. The store is rebuilt from this repo.
+  - Deploy after changes: `scp hosts/hessen/backup.sh hessen:/local/mrueve/scripts/hessen-backup.sh`.
 
 ## Troubleshooting tips
 
