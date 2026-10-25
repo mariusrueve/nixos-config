@@ -26,9 +26,12 @@ mkdir -p "$BASE/bin" "$BASE/nix" "$NIXHOME"
 
 # 1. nix-user-chroot
 if [[ ! -x $CHROOT ]]; then
-  curl -fL -o "$CHROOT" \
-    "https://github.com/nix-community/nix-user-chroot/releases/download/$NUC_VERSION/nix-user-chroot-bin-$NUC_VERSION-x86_64-unknown-linux-musl"
-  chmod +x "$CHROOT"
+  # Redirect instead of `curl -o`: hessen's AppArmor profile for /usr/bin/curl
+  # only lets curl itself write to /tmp, not to /local or /work.
+  curl -fL "https://github.com/nix-community/nix-user-chroot/releases/download/$NUC_VERSION/nix-user-chroot-bin-$NUC_VERSION-x86_64-unknown-linux-musl" \
+    > "$CHROOT.part"
+  chmod +x "$CHROOT.part"
+  mv "$CHROOT.part" "$CHROOT"
 fi
 
 in_env() { env HOME="$NIXHOME" IN_NIX_CHROOT=1 "$CHROOT" "$BASE/nix" bash -c "$1"; }
