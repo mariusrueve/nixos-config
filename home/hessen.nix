@@ -23,6 +23,11 @@
 
   programs.home-manager.enable = true;
 
+  # The login session (PAM) exports XDG_CONFIG_HOME etc. pointing at the NFS
+  # home, so git, nvim, tmux & co. would miss the files below. This exports
+  # them again, set to /local/mrueve/home/{.config,.local/share,...}.
+  xdg.enable = true;
+
   # Non-NixOS tweaks: sources nix.sh (PATH, SSL certs), XDG_DATA_DIRS. The GPU
   # driver setup needs root and a display; this is a headless SSH box.
   targets.genericLinux = {
