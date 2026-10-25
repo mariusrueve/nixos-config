@@ -66,8 +66,7 @@
       signcolumn = "yes";
       scrolloff = 8;
       wrap = false;
-      # Line-length guide at 88 (ruff/black default). Rust gets 100 below, rustfmt's limit.
-      colorcolumn = "88";
+      colorcolumn = "100";
 
       # 4-space indentation by default; filetype plugins / editorconfig override per language.
       expandtab = true;
@@ -90,23 +89,83 @@
 
     keymaps = [
       # Leave insert mode with `jk` (easier than reaching for Escape).
-      { mode = "i"; key = "jk"; action = "<Esc>"; }
+      {
+        mode = "i";
+        key = "jk";
+        action = "<Esc>";
+      }
       # Clear search highlight.
-      { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
+      {
+        mode = "n";
+        key = "<Esc>";
+        action = "<cmd>nohlsearch<CR>";
+      }
       # Move between splits.
-      { mode = "n"; key = "<C-h>"; action = "<C-w>h"; options.desc = "Window left"; }
-      { mode = "n"; key = "<C-j>"; action = "<C-w>j"; options.desc = "Window down"; }
-      { mode = "n"; key = "<C-k>"; action = "<C-w>k"; options.desc = "Window up"; }
-      { mode = "n"; key = "<C-l>"; action = "<C-w>l"; options.desc = "Window right"; }
+      {
+        mode = "n";
+        key = "<C-h>";
+        action = "<C-w>h";
+        options.desc = "Window left";
+      }
+      {
+        mode = "n";
+        key = "<C-j>";
+        action = "<C-w>j";
+        options.desc = "Window down";
+      }
+      {
+        mode = "n";
+        key = "<C-k>";
+        action = "<C-w>k";
+        options.desc = "Window up";
+      }
+      {
+        mode = "n";
+        key = "<C-l>";
+        action = "<C-w>l";
+        options.desc = "Window right";
+      }
       # Buffers (shown as tabs by bufferline).
-      { mode = "n"; key = "<S-h>"; action = "<cmd>BufferLineCyclePrev<CR>"; options.desc = "Previous buffer"; }
-      { mode = "n"; key = "<S-l>"; action = "<cmd>BufferLineCycleNext<CR>"; options.desc = "Next buffer"; }
-      { mode = "n"; key = "<leader>bd"; action = "<cmd>bdelete<CR>"; options.desc = "Close buffer"; }
+      {
+        mode = "n";
+        key = "<S-h>";
+        action = "<cmd>BufferLineCyclePrev<CR>";
+        options.desc = "Previous buffer";
+      }
+      {
+        mode = "n";
+        key = "<S-l>";
+        action = "<cmd>BufferLineCycleNext<CR>";
+        options.desc = "Next buffer";
+      }
+      {
+        mode = "n";
+        key = "<leader>bd";
+        action = "<cmd>bdelete<CR>";
+        options.desc = "Close buffer";
+      }
       # Keep the selection when indenting in visual mode.
-      { mode = "v"; key = "<"; action = "<gv"; }
-      { mode = "v"; key = ">"; action = ">gv"; }
+      {
+        mode = "v";
+        key = "<";
+        action = "<gv";
+      }
+      {
+        mode = "v";
+        key = ">";
+        action = ">gv";
+      }
       # Save with Ctrl-s in any mode.
-      { mode = [ "n" "i" "v" ]; key = "<C-s>"; action = "<cmd>w<CR><Esc>"; options.desc = "Save file"; }
+      {
+        mode = [
+          "n"
+          "i"
+          "v"
+        ];
+        key = "<C-s>";
+        action = "<cmd>w<CR><Esc>";
+        options.desc = "Save file";
+      }
     ];
 
     # Briefly highlight yanked text.
@@ -116,11 +175,6 @@
         callback.__raw = "function() vim.hl.on_yank() end";
       }
       # Match the guide to rustfmt's max_width.
-      {
-        event = "FileType";
-        pattern = "rust";
-        command = "setlocal colorcolumn=100";
-      }
     ];
   };
 }
