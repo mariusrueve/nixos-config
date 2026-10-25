@@ -44,6 +44,12 @@
     };
   };
 
+  # OpenAI Codex CLI (`codex`). Config in ~/.codex/ stays unmanaged.
+  programs.codex = {
+    enable = true;
+    package = pkgs.codex; # from the codex-cli-nix overlay (always up to date)
+  };
+
   # Catppuccin Mocha, blue accent, for every supported program on both machines.
   catppuccin = {
     enable = true;

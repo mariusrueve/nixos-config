@@ -22,6 +22,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Same for the OpenAI Codex CLI (overrides pkgs.codex).
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Catppuccin themes as NixOS/Home Manager modules (catppuccin.flavor etc.).
     catppuccin = {
       url = "github:catppuccin/nix/release-26.05";
@@ -42,12 +48,16 @@
       home-manager,
       nix-darwin,
       claude-code-nix,
+      codex-cli-nix,
       catppuccin,
       nixvim,
       ...
     }:
     let
-      overlays = [ claude-code-nix.overlays.default ];
+      overlays = [
+        claude-code-nix.overlays.default
+        codex-cli-nix.overlays.default
+      ];
       # Home Manager modules every configuration loads (desktop, macbook, hessen).
       hmModules = [
         catppuccin.homeModules.catppuccin

@@ -82,6 +82,8 @@
       "1password" # must live in /Applications for browser integration
       "1password-cli" # `op`; enable "Integrate with 1Password CLI" in the app
       "mattermost"
+      "claude" # Claude desktop app
+      "chatgpt" # ChatGPT desktop app
     ];
   };
 
