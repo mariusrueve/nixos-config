@@ -53,7 +53,7 @@
   services.jankyborders = {
     enable = true;
     style = "round";
-    width = 4.0; # ≈ Hyprland border_size 2 at scale 1.5
+    width = 6.0; # ≈ Hyprland border_size 2 at scale 1.5
     hidpi = true;
     active_color = "0xff89b4fa";
     inactive_color = "0x006c7086";
