@@ -11,7 +11,12 @@
 # SGE jobs run on other nodes without /nix: job environments are uv venvs on
 # /work or /scratch with a uv-managed Python (UV_PYTHON_INSTALL_DIR below).
 
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 {
   imports = [
@@ -38,7 +43,10 @@
   # Single-user Nix from the installer; this only writes ~/.config/nix/nix.conf.
   nix = {
     package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   # Gerrit at the university wants the uni address.
@@ -62,7 +70,6 @@
   };
 
   programs.bash = {
-    shellAliases.cdphd = "cd /local/mrueve/home/phd";
     # The login environment sometimes passes a useless TERM. Leave multiplexers alone.
     initExtra = ''
       if [[ -z "$TMUX" && (-z "$TERM" || "$TERM" == "vt220" || "$TERM" == "dumb") ]]; then
