@@ -5,6 +5,11 @@
 {
   programs.kitty = {
     enable = true;
+    # macOS: the official app comes from the Homebrew cask (hosts/macbook). The
+    # nixpkgs kitty.app's main executable is a wrapper that execs .kitty-wrapped,
+    # which leaves LaunchServices with a PID-less kitty entry, so AeroSpace never
+    # manages its windows. Home Manager then only writes the config.
+    package = lib.mkIf pkgs.stdenv.isDarwin null;
     font = {
       name = "JetBrainsMono Nerd Font";
       size = if pkgs.stdenv.isDarwin then 13 else 11; # Retina vs 4K@1.5x

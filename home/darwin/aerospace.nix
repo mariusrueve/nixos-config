@@ -7,11 +7,9 @@
 # (new windows split the focused container), there is no toggleable scratchpad
 # (Option+S is a plain workspace "S"), and notifications/colour picker have no binds.
 
-{ config, ... }:
+{ ... }:
 
 let
-  kitty = "${config.programs.kitty.package}/Applications/kitty.app";
-
   # Option+H/J/K/L focus, +Shift move, +Ctrl resize (same as on the desktop).
   directions = {
     h = "left";
@@ -85,7 +83,7 @@ in
         // workspaceBinds
         // {
           # Apps
-          alt-enter = "exec-and-forget open -n ${kitty}";
+          alt-enter = "exec-and-forget open -n /Applications/kitty.app"; # Homebrew cask; full path so LaunchServices cannot pick a stale Nix kitty.app
           alt-e = "exec-and-forget open ~";
           alt-b = "exec-and-forget open -a 'Google Chrome'";
           # Raycast stands in for cliphist and rofimoji (same keys as the desktop).

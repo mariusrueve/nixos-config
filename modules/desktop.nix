@@ -57,6 +57,15 @@
   programs.hyprlock.enable = true;
   security.polkit.enable = true;
 
+  # 1Password: system modules rather than home.packages, as they set up the
+  # setgid helper and polkit policy that CLI, browser and system-auth
+  # (unlock with the login password) integration need.
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "marius" ];
+  };
+
   # Required for Home Manager's dconf module (GTK dark mode etc.).
   programs.dconf.enable = true;
 

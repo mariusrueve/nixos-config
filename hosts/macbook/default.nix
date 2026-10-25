@@ -22,9 +22,14 @@
 
   users.users.marius = {
     home = "/Users/marius";
+    # Must match the existing account (id -u); required for knownUsers.
+    uid = 501;
     # Same shell as on the desktop. macOS' /bin/bash is 3.2; this is bash 5.
     shell = pkgs.bashInteractive;
   };
+  # nix-darwin only applies `shell` (and other attributes) to users listed here.
+  # Careful: a user listed here but no longer in users.users gets deleted.
+  users.knownUsers = [ "marius" ];
   # Registers Nix's bash in /etc/shells and sources the Nix environment in it.
   environment.shells = [ pkgs.bashInteractive ];
   programs.bash.enable = true;
@@ -48,7 +53,7 @@
   services.jankyborders = {
     enable = true;
     style = "round";
-    width = 3.0; # ≈ Hyprland border_size 2 at scale 1.5
+    width = 4.0; # ≈ Hyprland border_size 2 at scale 1.5
     hidpi = true;
     active_color = "0xff89b4fa";
     inactive_color = "0x006c7086";
@@ -59,18 +64,23 @@
   # cleanup = "zap": anything not listed here gets removed on rebuild.
   homebrew = {
     enable = true;
+    # `brew shellenv` in bash: puts /opt/homebrew/bin (op, kitty, kitten) on PATH.
+    enableBashIntegration = true;
     onActivation = {
       autoUpdate = true;
       upgrade = true;
       cleanup = "zap";
     };
     casks = [
+      "kitty" # terminal; config from home/common/kitty.nix (see there for why not Nix)
       "raycast" # launcher (Cmd+Space), clipboard history, emoji picker
       "google-chrome" # default browser (the chromium cask is unsigned)
       "firefox"
       "spotify"
       "discord"
       "skim" # PDF viewer with SyncTeX for vimtex
+      "1password" # must live in /Applications for browser integration
+      "1password-cli" # `op`; enable "Integrate with 1Password CLI" in the app
     ];
   };
 
