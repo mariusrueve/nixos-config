@@ -23,8 +23,26 @@
   # Mac GUI apps → homebrew.casks in hosts/macbook/default.nix.
   home.packages = with pkgs; [
     fastfetch
-    claude-code # from the claude-code-nix overlay (always up to date)
   ];
+
+  # Claude Code. Home Manager writes ~/.claude/settings.json as a read-only
+  # symlink, so settings changed through /config won't save: change them here.
+  # The rest of ~/.claude/ (sessions, history, memory, plugins) is Claude
+  # Code's own state and stays unmanaged.
+  programs.claude-code = {
+    enable = true;
+    package = pkgs.claude-code; # from the claude-code-nix overlay (always up to date)
+    settings = {
+      theme = "auto";
+      modelSettings."claude-opus-5-5".autoCompactWindow = 400000;
+      # No Co-Authored-By trailer or PR footer.
+      attribution = {
+        commit = "";
+        pr = "";
+        sessionUrl = false;
+      };
+    };
+  };
 
   # Catppuccin Mocha, blue accent, for every supported program on both machines.
   catppuccin = {
