@@ -47,9 +47,16 @@
       ...
     }:
     let
-      # Used by both hosts: overlays + Home Manager plumbing + shared HM modules.
+      overlays = [ claude-code-nix.overlays.default ];
+      # Home Manager modules every configuration loads (desktop, macbook, hessen).
+      hmModules = [
+        catppuccin.homeModules.catppuccin
+        nixvim.homeModules.nixvim
+      ];
+
+      # Used by both system hosts: overlays + Home Manager plumbing + shared HM modules.
       shared = {
-        nixpkgs.overlays = [ claude-code-nix.overlays.default ];
+        nixpkgs.overlays = overlays;
         nixpkgs.config.allowUnfree = true;
 
         home-manager = {
@@ -57,10 +64,7 @@
           useUserPackages = true;
           # If an unmanaged file is in the way, rename it to *.hm-backup instead of failing.
           backupFileExtension = "hm-backup";
-          sharedModules = [
-            catppuccin.homeModules.catppuccin
-            nixvim.homeModules.nixvim
-          ];
+          sharedModules = hmModules;
         };
       };
     in
@@ -84,6 +88,18 @@
           home-manager.darwinModules.home-manager
           shared
         ];
+      };
+
+      # Uni server hessen (openSUSE, no root): standalone Home Manager inside
+      # nix-user-chroot. On hessen: `home-manager switch --flake .#mrueve@hessen`.
+      # Setup and constraints: AGENTS.md and home/hessen.nix.
+      homeConfigurations."mrueve@hessen" = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          inherit overlays;
+          config.allowUnfree = true;
+        };
+        modules = hmModules ++ [ ./home/hessen.nix ];
       };
 
       # Per-project dev environments (both machines):

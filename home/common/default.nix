@@ -6,8 +6,9 @@
 { pkgs, ... }:
 
 {
+  # kitty.nix is imported per host (home/desktop.nix, home/macbook.nix):
+  # the headless uni server (home/hessen.nix) has no GUI terminal.
   imports = [
-    ./kitty.nix
     ./neovim # editor (nixvim)
   ];
 

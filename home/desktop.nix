@@ -2,6 +2,7 @@
 {
   imports = [
     ./common
+    ./common/kitty.nix
     ./linux
   ];
 }
