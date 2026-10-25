@@ -11,8 +11,10 @@
     # manages its windows. Home Manager then only writes the config.
     package = lib.mkIf pkgs.stdenv.isDarwin null;
     font = {
-      name = "JetBrainsMono Nerd Font";
-      size = if pkgs.stdenv.isDarwin then 13 else 11; # Retina vs 4K@1.5x
+      # On macOS kitty skips fonts CoreText doesn't flag as monospace and falls
+      # back to Menlo; only the "Mono" Nerd Font variant (single-width icons) is.
+      name = if pkgs.stdenv.isDarwin then "JetBrainsMono Nerd Font Mono" else "JetBrainsMono Nerd Font";
+      size = if pkgs.stdenv.isDarwin then 14 else 11; # Retina vs 4K@1.5x
     };
     settings = {
       window_padding_width = 8;
