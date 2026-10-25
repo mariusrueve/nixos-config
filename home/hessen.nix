@@ -62,7 +62,7 @@
   };
 
   programs.bash = {
-    shellAliases.cdphd = "cd /local/mrueve/phd";
+    shellAliases.cdphd = "cd /local/mrueve/home/phd";
     # The login environment sometimes passes a useless TERM. Leave multiplexers alone.
     initExtra = ''
       if [[ -z "$TMUX" && (-z "$TERM" || "$TERM" == "vt220" || "$TERM" == "dumb") ]]; then
