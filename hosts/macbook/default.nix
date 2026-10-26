@@ -107,6 +107,7 @@
       "chatgpt" # ChatGPT desktop app
       "zotero" # reference manager
       "obsidian" # notes
+      "wispr-flow"
     ];
   };
 
