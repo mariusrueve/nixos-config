@@ -105,6 +105,7 @@
       "mattermost"
       "claude" # Claude desktop app
       "chatgpt" # ChatGPT desktop app
+      "zotero" # reference manager
     ];
   };
 

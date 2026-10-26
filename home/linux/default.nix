@@ -16,5 +16,6 @@
     spotify
     discord
     mattermost-desktop
+    zotero
   ];
 }
