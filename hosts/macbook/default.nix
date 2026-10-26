@@ -92,6 +92,7 @@
       upgrade = true;
       cleanup = "zap";
     };
+    taps = [ "mariusrueve/tap" ];
     casks = [
       "kitty" # terminal; config from home/common/kitty.nix (see there for why not Nix)
       "raycast" # launcher (Cmd+Space), clipboard history, emoji picker
@@ -108,6 +109,7 @@
       "zotero" # reference manager
       "obsidian" # notes
       "wispr-flow"
+      "mariusrueve/tap/labroute" # SSH-tunnel routing for journals/lab sites; ssh + shell hooks in home/darwin
     ];
   };
 
