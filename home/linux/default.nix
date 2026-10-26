@@ -17,5 +17,6 @@
     discord
     mattermost-desktop
     zotero
+    obsidian
   ];
 }
